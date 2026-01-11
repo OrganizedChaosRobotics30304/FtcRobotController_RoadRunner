@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import android.app.Notification;
+import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -31,12 +32,32 @@ public class TimedAction implements Action {
     private final double duration;
     private double startTime = -1.0;
 
-    public TimedAction (Runnable start, Runnable end, double Duration){
+    public TimedAction (Runnable start, Runnable end, double duration){
 
         this.start = start;
         this.end = end;
         this.duration = duration;
 
+    }
+
+    @Override
+    public boolean run(@NonNull TelemetryPacket packet) {
+        if (startTime <0) {
+            start.run();
+            startTime = System.currentTimeMillis();
+        }
+
+        double elapsed = (System.currentTimeMillis() - startTime) / 1000.0;
+
+        packet.put("elapsedTime", elapsed);
+
+        if (elapsed < duration) {
+            return true;
+        }
+        else {
+            end.run();
+            return false;
+        }
     }
 }
 
@@ -44,7 +65,7 @@ public class ShooterClass {
 
     private DcMotor shooterLeft, shooterRight;
 
-    public Shooter (HardwareMap hardwareMap) {
+    public ShooterClass(HardwareMap hardwareMap) {
 
         shooterLeft = hardwareMap.get(DcMotor.class, "leftShooterMotor");
         shooterRight = hardwareMap.get(DcMotor.class, "rightShooterMotor");
@@ -76,7 +97,7 @@ public class PassthroughClass{
 
     private DcMotor passthroughRight, passthroughLeft;
 
-    public Passthrough(HardwareMap hardwareMap){
+    public PassthroughClass(HardwareMap hardwareMap){
 
         passthroughLeft = hardwareMap.get(DcMotor.class, "leftPassthroughMotor");
         passthroughRight = hardwareMap.get(DcMotor.class, "rightPassthroughMotor");
@@ -121,7 +142,7 @@ public class PassthroughClass{
 
     Action moveToShootAction = moveToShoot.build();
 
-    Action trajectoryActionCloseOut = moveToShootAction.endTrajectory().fresh()
+    Action trajectoryActionCloseOut = moveToShoot.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
             .lineToXSplineHeading (30, Math.toRadians(270))
             .build();
