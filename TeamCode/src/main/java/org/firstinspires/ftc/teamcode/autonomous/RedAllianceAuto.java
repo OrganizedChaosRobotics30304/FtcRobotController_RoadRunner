@@ -19,11 +19,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-import java.time.Duration;
-
 @Config
 @Autonomous
-public class BlueAllianceAuto extends LinearOpMode {
+public class RedAllianceAuto extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -126,7 +124,7 @@ public class PassthroughClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63.5, -24, Math.toRadians(270));
+    Pose2d initialPose = new Pose2d(63.5, 24, Math.toRadians(90));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
@@ -136,8 +134,7 @@ public class PassthroughClass{
     TrajectoryActionBuilder moveToShoot = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(48, 0,Math.toRadians(15)),
-                    //31 degrees to corner of goal
+                     new Pose2d(48, 0,Math.toRadians(342)),
                     Math.PI / 2
             );
 
@@ -145,7 +142,7 @@ public class PassthroughClass{
 
     Action trajectoryActionCloseOut = moveToShoot.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (30, Math.toRadians(279.5))
+            .lineToXSplineHeading (30, Math.toRadians(80.5))
             .build();
     Action shooterAndPassthrough = new ParallelAction(
             shooter.runShooter(4.0),
