@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp
-public class Scrimmage extends OpMode {
+public class MainTeleOp extends OpMode {
     public DcMotor frontRight;
     public DcMotor backRight;
     public DcMotor frontLeft;
