@@ -168,11 +168,13 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
             .lineToXSplineHeading (24, Math.toRadians(279.5));
+            //.lineToXSplineHeading(24,Math.toRadians(270));
 
     Action moveToAlignAction = moveToAlign.build();
 
     TrajectoryActionBuilder moveToIntake = moveToAlign.endTrajectory().fresh()
-            .lineToY(61);
+            .setTangent(Math.toRadians(270))
+            .lineToY(-61);
 
     Action moveToIntakeAction = moveToIntake.build();
 
@@ -207,7 +209,7 @@ public class IntakeClass{
     Action intakeAndMovement = new ParallelAction(
            intake.runIntake(4.0),
             moveToIntakeAction,
-            passthrough.runPassthrough(4.0)
+            passthrough.runPassthrough(1.67)
     );
 
     waitForStart();
