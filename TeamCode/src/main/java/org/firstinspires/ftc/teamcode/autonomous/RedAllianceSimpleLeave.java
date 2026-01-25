@@ -132,7 +132,7 @@ public class PassthroughClass{
     TrajectoryActionBuilder moveToLeave = drive.actionBuilder(initialPose)
             .lineToX(-32)
             .waitSeconds(0.5)
-            .turnTo(Math.toRadians(73.5));
+            .turnTo(Math.toRadians(71.5));
 
     //.setTangent(Math.toRadians(0))
             //.splineToLinearHeading(
