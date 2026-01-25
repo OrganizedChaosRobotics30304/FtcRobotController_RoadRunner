@@ -19,11 +19,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-import java.time.Duration;
-
 @Config
 @Autonomous
-public class BlueAllianceAuto extends LinearOpMode {
+public class BlueAllianceAuto3Piece extends LinearOpMode {
 
 public class TimedAction implements Action {
 

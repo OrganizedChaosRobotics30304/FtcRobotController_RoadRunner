@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class RedAllianceAuto extends LinearOpMode {
+public class BlueAllianceAuto6Piece extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -122,28 +123,71 @@ public class PassthroughClass{
    }
 }
 
+public class IntakeClass{
+    private CRServo intakeRight, intakeLeft;
+
+    public IntakeClass(HardwareMap hardwareMap){
+        intakeRight = hardwareMap.get(CRServo.class, "rightIntakeServo");
+        intakeLeft = hardwareMap.get(CRServo.class, "leftIntakeServo");
+
+        intakeLeft.setDirection(CRServo.Direction.REVERSE);
+    }
+
+    public Action runIntake(double seconds) {
+
+        return new TimedAction(
+                ()->{
+                    intakeLeft.setPower(-1.0);
+                    intakeRight.setPower(-1.0);
+                },
+                ()->{
+                    intakeLeft.setPower(0.0);
+                    intakeRight.setPower(0.0);
+                },
+                seconds
+        );
+    }
+}
+
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63.5, 24, Math.toRadians(90));
+    Pose2d initialPose = new Pose2d(63.5, -24, Math.toRadians(270));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-
+    IntakeClass intake = new IntakeClass(hardwareMap);
     ShooterClass shooter = new ShooterClass(hardwareMap);
     PassthroughClass passthrough = new PassthroughClass(hardwareMap);
 
-    TrajectoryActionBuilder moveToShoot = drive.actionBuilder(initialPose)
+    TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(48, 0,Math.toRadians(342)),
-                    Math.PI / 2
-            );
+                     new Pose2d(48, 0,Math.toRadians(15)),Math.PI / 2);
 
-    Action moveToShootAction = moveToShoot.build();
+    Action moveToShootPreloadAction = moveToShootPreload.build();
 
-    Action trajectoryActionCloseOut = moveToShoot.endTrajectory().fresh()
+    TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (30, Math.toRadians(80.5))
-            .build();
+            .lineToXSplineHeading (24, Math.toRadians(279.5));
+
+    Action moveToAlignAction = moveToAlign.build();
+
+    TrajectoryActionBuilder moveToIntake = moveToAlign.endTrajectory().fresh()
+            .lineToY(61);
+
+    Action moveToIntakeAction = moveToIntake.build();
+
+    TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
+            .setTangent(Math.toRadians(90))
+            .splineToLinearHeading(new Pose2d(48, 0, Math.toRadians(15)),Math.PI / 2);
+
+    Action moveToShootFinalAction = moveToShootFinal.build();
+
+    TrajectoryActionBuilder moveToLeave = moveToShootFinal.endTrajectory().fresh()
+            .setTangent(Math.toRadians(180))
+            .lineToXSplineHeading (24, Math.toRadians(279.5));
+
+    Action moveToLeaveAction = moveToLeave.build();
+
     Action shooterAndPassthrough = new ParallelAction(
             shooter.runShooter(4.0),
             new SequentialAction(
@@ -152,13 +196,32 @@ public class PassthroughClass{
             )
     );
 
+    Action shooterAndPassthroughAgain = new ParallelAction(
+            shooter.runShooter(4.0),
+            new SequentialAction(
+                    new SleepAction(1.5),
+                    passthrough.runPassthrough(2.5)
+            )
+    );
+
+    Action intakeAndMovement = new ParallelAction(
+           intake.runIntake(4.0),
+            moveToIntakeAction,
+            passthrough.runPassthrough(4.0)
+    );
+
     waitForStart();
 
     Actions.runBlocking(
             new SequentialAction(
-                    moveToShootAction,
+                    moveToShootPreloadAction,
                     shooterAndPassthrough,
-                    trajectoryActionCloseOut
+                    moveToAlignAction,
+                    intakeAndMovement,
+                    moveToShootFinalAction,
+                    shooterAndPassthroughAgain,
+                    moveToLeaveAction
+
             )
     );
 
