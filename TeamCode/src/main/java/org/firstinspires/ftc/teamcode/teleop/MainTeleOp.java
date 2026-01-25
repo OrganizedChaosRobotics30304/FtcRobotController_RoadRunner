@@ -22,6 +22,7 @@ public class MainTeleOp extends OpMode {
     public CRServo intakeLeft;
     public CRServo intakeRight;
     public IMU imu;
+    double shooterSpeed = 0.96;
 
     @Override
     public void init() {
@@ -152,12 +153,18 @@ public class MainTeleOp extends OpMode {
         }
 
         //kwa-pow thingy
+        if (gamepad2.y){
+            shooterSpeed = 0.96;
+        }
+        else if (gamepad2.x){
+            shooterSpeed = 0.90;
+        }
         double shooterForwardPower = gamepad2.right_trigger;
         double shooterReversePower = gamepad2.right_stick_y;
 
         if (gamepad2.right_trigger > 0.05) {
-            shooterLeft.setPower(shooterForwardPower-0.05); // lower speed for shooter; higher decimal = less speed
-            shooterRight.setPower(shooterForwardPower-0.05);
+            shooterLeft.setPower(shooterForwardPower * shooterSpeed); // lower speed for shooter; higher decimal = less speed
+            shooterRight.setPower(shooterForwardPower *shooterSpeed);
         }
         else if (gamepad2.right_stick_y > 0.05) {
             shooterLeft.setPower(-shooterReversePower/2);
