@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class BlueAllianceAuto6Piece extends LinearOpMode {
+public class RedAllianceAuto6Piece extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -79,7 +79,7 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            // Changed from .98 to .96 for consistency with new battery
+
             shooterLeft.setPower(0.96);
             shooterRight.setPower(0.96);
         },
@@ -151,7 +151,7 @@ public class IntakeClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63.5, -24, Math.toRadians(270));
+    Pose2d initialPose = new Pose2d(63.5, 24, Math.toRadians(90));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
     IntakeClass intake = new IntakeClass(hardwareMap);
@@ -161,32 +161,32 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(48, 0,Math.toRadians(15)),Math.PI / 2);
+                     new Pose2d(48, 0,Math.toRadians(342)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
     TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (24, Math.toRadians(279.5));
+            .lineToXSplineHeading (29, Math.toRadians(80.5));
             //.lineToXSplineHeading(24,Math.toRadians(270));
 
     Action moveToAlignAction = moveToAlign.build();
 
     TrajectoryActionBuilder moveToIntake = moveToAlign.endTrajectory().fresh()
-            .setTangent(Math.toRadians(270))
-            .lineToY(-61);
+            .setTangent(Math.toRadians(90))
+            .lineToY(61);
 
     Action moveToIntakeAction = moveToIntake.build();
 
     TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
-            .setTangent(Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(48, 0, Math.toRadians(17)),Math.PI / 2);
+            .setTangent(Math.toRadians(270))
+            .splineToLinearHeading(new Pose2d(48, 0, Math.toRadians(340)),Math.PI / 2);
 
     Action moveToShootFinalAction = moveToShootFinal.build();
 
     TrajectoryActionBuilder moveToLeave = moveToShootFinal.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (20, Math.toRadians(279.5));
+            .lineToXSplineHeading (20, Math.toRadians(80.5));
 
     Action moveToLeaveAction = moveToLeave.build();
 
@@ -205,12 +205,12 @@ public class IntakeClass{
                     passthrough.runPassthrough(2.5)
             ),
             new SequentialAction(
-                   new SleepAction(1.5),
-                   intake.runIntake(2.5)
+                    new SleepAction(1.5),
+                    intake.runIntake(2.5)
             )
     );
 
-     Action intakeAndMovement = new ParallelAction(
+    Action intakeAndMovement = new ParallelAction(
             moveToIntakeAction,
             new SequentialAction(
                     new SleepAction(0.3),
@@ -221,7 +221,6 @@ public class IntakeClass{
                     passthrough.runPassthrough(0.75)
             )
     );
-
 
     waitForStart();
 
