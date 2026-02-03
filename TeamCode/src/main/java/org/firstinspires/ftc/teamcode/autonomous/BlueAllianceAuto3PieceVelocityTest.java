@@ -13,8 +13,8 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class BlueAllianceAuto3Piece extends LinearOpMode {
+public class BlueAllianceAuto3PieceVelocityTest extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -62,17 +62,17 @@ public class TimedAction implements Action {
 
 public class ShooterClass {
 
-    private DcMotor shooterLeft, shooterRight;
+    private DcMotorEx shooterLeft, shooterRight;
 
     public ShooterClass(HardwareMap hardwareMap) {
 
-        shooterLeft = hardwareMap.get(DcMotor.class, "leftShooterMotor");
-        shooterRight = hardwareMap.get(DcMotor.class, "rightShooterMotor");
+        shooterLeft = hardwareMap.get(DcMotorEx.class, "leftShooterMotor");
+        shooterRight = hardwareMap.get(DcMotorEx.class, "rightShooterMotor");
 
         shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooterLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooterRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        shooterRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
     public Action runShooter(double seconds){
@@ -80,8 +80,12 @@ public class ShooterClass {
         return new TimedAction(
         ()-> {
 
-            shooterLeft.setPower(0.975);
-            shooterRight.setPower(0.975);
+            //new as of 1/30
+            shooterLeft.setVelocity(1975);
+            shooterRight.setVelocity(1975);
+
+            //shooterLeft.setPower(0.975);
+            //shooterRight.setPower(0.975);
         },
                 ()-> {
 
@@ -135,7 +139,7 @@ public class PassthroughClass{
     TrajectoryActionBuilder moveToShoot = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(48, 0,Math.toRadians(13.5)),
+                     new Pose2d(48, 0,Math.toRadians(13.25)),
                     Math.PI / 2
             );
 
@@ -162,6 +166,5 @@ public class PassthroughClass{
                     trajectoryActionCloseOut
             )
     );
-
 }
 }

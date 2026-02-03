@@ -213,7 +213,7 @@ public class IntakeClass{
     Action intakeAndMovement = new ParallelAction(
             moveToIntakeAction,
             new SequentialAction(
-                    new SleepAction(0.3),
+                    //new SleepAction(0.3),
                     intake.runIntake(2.5)
             ),
             new SequentialAction(

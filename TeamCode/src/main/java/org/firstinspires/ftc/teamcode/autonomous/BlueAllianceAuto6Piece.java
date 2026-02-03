@@ -80,8 +80,8 @@ public class ShooterClass {
         return new TimedAction(
         ()-> {
             // Changed from .98 to .96 for consistency with new battery
-            shooterLeft.setPower(0.96);
-            shooterRight.setPower(0.96);
+            shooterLeft.setPower(0.78);
+            shooterRight.setPower(0.78);
         },
                 ()-> {
 
@@ -213,8 +213,10 @@ public class IntakeClass{
      Action intakeAndMovement = new ParallelAction(
             moveToIntakeAction,
             new SequentialAction(
-                    new SleepAction(0.3),
+                    //new SleepAction(0.3),
+                    //new SleepAction(0.2),
                     intake.runIntake(2.5)
+
             ),
             new SequentialAction(
                     new SleepAction(1.0),
