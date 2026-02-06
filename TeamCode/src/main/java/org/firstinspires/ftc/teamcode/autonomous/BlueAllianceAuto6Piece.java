@@ -80,8 +80,8 @@ public class ShooterClass {
         return new TimedAction(
         ()-> {
             // Changed from .98 to .96 for consistency with new battery
-            shooterLeft.setPower(0.78);
-            shooterRight.setPower(0.78);
+            shooterLeft.setPower(0.80);
+            shooterRight.setPower(0.80);
         },
                 ()-> {
 

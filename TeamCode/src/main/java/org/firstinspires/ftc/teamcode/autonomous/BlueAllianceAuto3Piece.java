@@ -80,8 +80,8 @@ public class ShooterClass {
         return new TimedAction(
         ()-> {
 
-            shooterLeft.setPower(0.975);
-            shooterRight.setPower(0.975);
+            shooterLeft.setPower(0.80);
+            shooterRight.setPower(0.80);
         },
                 ()-> {
 
@@ -125,7 +125,7 @@ public class PassthroughClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(62, -24, Math.toRadians(270));
+    Pose2d initialPose = new Pose2d(63.5, -24, Math.toRadians(270));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
@@ -135,7 +135,7 @@ public class PassthroughClass{
     TrajectoryActionBuilder moveToShoot = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(48, 0,Math.toRadians(13.5)),
+                     new Pose2d(48, 0,Math.toRadians(15)),
                     Math.PI / 2
             );
 

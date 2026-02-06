@@ -154,10 +154,10 @@ public class MainTeleOp extends OpMode {
 
         //kwa-pow thingy
         if (gamepad2.y){
-            shooterSpeed = 0.96;
+            shooterSpeed = 0.90;
         }
         else if (gamepad2.x){
-            shooterSpeed = 0.90;
+            shooterSpeed = 0.82;
         }
         double shooterForwardPower = gamepad2.right_trigger;
         double shooterReversePower = gamepad2.right_stick_y;
