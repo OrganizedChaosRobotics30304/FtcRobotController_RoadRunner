@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -79,8 +80,8 @@ public class ShooterClass {
         return new TimedAction(
         ()-> {
 
-            shooterLeft.setPower(0.98);
-            shooterRight.setPower(0.98);
+            shooterLeft.setPower(0.82);
+            shooterRight.setPower(0.82);
         },
                 ()-> {
 
@@ -122,33 +123,69 @@ public class PassthroughClass{
    }
 }
 
+    public class IntakeClass{
+        private CRServo intakeRight, intakeLeft;
+
+        public IntakeClass(HardwareMap hardwareMap){
+            intakeRight = hardwareMap.get(CRServo.class, "rightIntakeServo");
+            intakeLeft = hardwareMap.get(CRServo.class, "leftIntakeServo");
+
+            intakeLeft.setDirection(CRServo.Direction.REVERSE);
+        }
+
+        public Action runIntake(double seconds) {
+
+            return new TimedAction(
+                    ()->{
+                        intakeLeft.setPower(-1.0);
+                        intakeRight.setPower(-1.0);
+                    },
+                    ()->{
+                        intakeLeft.setPower(0.0);
+                        intakeRight.setPower(0.0);
+                    },
+                    seconds
+            );
+        }
+    }
+
 @Override
   public void runOpMode(){
     Pose2d initialPose = new Pose2d(63.5, 24, Math.toRadians(90));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-
+    IntakeClass intake = new IntakeClass(hardwareMap);
     ShooterClass shooter = new ShooterClass(hardwareMap);
     PassthroughClass passthrough = new PassthroughClass(hardwareMap);
 
     TrajectoryActionBuilder moveToShoot = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(48, 0,Math.toRadians(342)),
+                     new Pose2d(48, 0,Math.toRadians(340)),
                     Math.PI / 2
             );
 
     Action moveToShootAction = moveToShoot.build();
 
     Action trajectoryActionCloseOut = moveToShoot.endTrajectory().fresh()
-            .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (30, Math.toRadians(80.5))
+            .setTangent(Math.toRadians(90))
+            .lineToYSplineHeading (28, Math.toRadians(82.5))
             .build();
-    Action shooterAndPassthrough = new ParallelAction(
+    /*Action shooterAndPassthrough = new ParallelAction(
             shooter.runShooter(4.0),
             new SequentialAction(
                     new SleepAction(1.5),
                     passthrough.runPassthrough(2.5)
+            )
+    );*/
+    Action shooterAndPassthrough = new ParallelAction(
+            shooter.runShooter(4.0),
+            new SequentialAction(
+                    new SleepAction(2.0),
+                    passthrough.runPassthrough(3.0)),
+            new SequentialAction(
+                    new SleepAction(2.0),
+                    intake.runIntake(3.0)
             )
     );
 

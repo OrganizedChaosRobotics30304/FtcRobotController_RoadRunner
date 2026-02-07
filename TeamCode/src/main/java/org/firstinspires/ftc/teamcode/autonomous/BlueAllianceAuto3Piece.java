@@ -168,8 +168,8 @@ public class PassthroughClass{
     Action moveToShootAction = moveToShoot.build();
 
     Action trajectoryActionCloseOut = moveToShoot.endTrajectory().fresh()
-            .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (30, Math.toRadians(279.5))
+            .setTangent(Math.toRadians(90))
+            .lineToYSplineHeading (28, Math.toRadians(279.5))
             .build();
     /*Action shooterAndPassthrough = new ParallelAction(
             shooter.runShooter(4.0),

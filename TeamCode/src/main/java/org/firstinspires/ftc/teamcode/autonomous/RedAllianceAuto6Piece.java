@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class RedAllianceAuto6PieceNOT extends LinearOpMode {
+public class RedAllianceAuto6Piece extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -79,9 +79,8 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-
-            shooterLeft.setPower(0.96);
-            shooterRight.setPower(0.96);
+            shooterLeft.setPower(0.82);
+            shooterRight.setPower(0.82);
         },
                 ()-> {
 
@@ -161,13 +160,13 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(48, 0,Math.toRadians(342)),Math.PI / 2);
+                     new Pose2d(48, 0,Math.toRadians(340)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
     TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (29, Math.toRadians(80.5));
+            .lineToXSplineHeading (36, Math.toRadians(90));
             //.lineToXSplineHeading(24,Math.toRadians(270));
 
     Action moveToAlignAction = moveToAlign.build();
@@ -180,22 +179,27 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .splineToLinearHeading(new Pose2d(48, 0, Math.toRadians(340)),Math.PI / 2);
+            .splineToLinearHeading(new Pose2d(48, 0, Math.toRadians(338)),Math.PI / 2);
 
     Action moveToShootFinalAction = moveToShootFinal.build();
 
     TrajectoryActionBuilder moveToLeave = moveToShootFinal.endTrajectory().fresh()
-            .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (20, Math.toRadians(80.5));
+            //.setTangent(Math.toRadians(180))
+            .setTangent(Math.toRadians(90))
+            //.lineToYSplineHeading (-36, Math.toRadians(279.5));
+            .lineToYSplineHeading (28, Math.toRadians(82.5));
 
     Action moveToLeaveAction = moveToLeave.build();
 
     Action shooterAndPassthrough = new ParallelAction(
             shooter.runShooter(4.0),
             new SequentialAction(
-                    new SleepAction(1.5),
-                    passthrough.runPassthrough(2.5)
-            )
+                    new SleepAction(2.0),
+                    passthrough.runPassthrough(3.0)),
+            new SequentialAction(
+            new SleepAction(2.0),
+            intake.runIntake(3.0)
+    )
     );
 
     Action shooterAndPassthroughAgain = new ParallelAction(
@@ -205,22 +209,25 @@ public class IntakeClass{
                     passthrough.runPassthrough(2.5)
             ),
             new SequentialAction(
-                    new SleepAction(1.5),
-                    intake.runIntake(2.5)
+                   new SleepAction(1.5),
+                   intake.runIntake(2.5)
             )
     );
 
-    Action intakeAndMovement = new ParallelAction(
+     Action intakeAndMovement = new ParallelAction(
             moveToIntakeAction,
             new SequentialAction(
                     //new SleepAction(0.3),
+                    //new SleepAction(0.2),
                     intake.runIntake(2.5)
+
             ),
             new SequentialAction(
                     new SleepAction(1.0),
-                    passthrough.runPassthrough(0.75)
+                    passthrough.runPassthrough(0.65)
             )
     );
+
 
     waitForStart();
 

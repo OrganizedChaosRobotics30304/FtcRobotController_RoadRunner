@@ -66,7 +66,7 @@ public class TimedAction implements Action {
     TrajectoryActionBuilder moveToLeave = drive.actionBuilder(initialPose)
             .lineToX(-35)
             .waitSeconds(0.5)
-            .turnTo(Math.toRadians(72));
+            .turnTo(Math.toRadians(111));
 
     Action actionMoveToLeave = moveToLeave.build();
 
