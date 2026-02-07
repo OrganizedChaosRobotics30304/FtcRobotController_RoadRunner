@@ -79,9 +79,8 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            // Changed from .98 to .96 for consistency with new battery
-            shooterLeft.setPower(0.80);
-            shooterRight.setPower(0.80);
+            shooterLeft.setPower(0.82);
+            shooterRight.setPower(0.82);
         },
                 ()-> {
 
@@ -167,7 +166,7 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (24, Math.toRadians(279.5));
+            .lineToXSplineHeading (26, Math.toRadians(278));
             //.lineToXSplineHeading(24,Math.toRadians(270));
 
     Action moveToAlignAction = moveToAlign.build();
@@ -185,17 +184,22 @@ public class IntakeClass{
     Action moveToShootFinalAction = moveToShootFinal.build();
 
     TrajectoryActionBuilder moveToLeave = moveToShootFinal.endTrajectory().fresh()
-            .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (20, Math.toRadians(279.5));
+            //.setTangent(Math.toRadians(180))
+            .setTangent(Math.toRadians(270))
+            //.lineToYSplineHeading (-36, Math.toRadians(279.5));
+            .lineToYSplineHeading (-28, Math.toRadians(274));
 
     Action moveToLeaveAction = moveToLeave.build();
 
     Action shooterAndPassthrough = new ParallelAction(
             shooter.runShooter(4.0),
             new SequentialAction(
-                    new SleepAction(1.5),
-                    passthrough.runPassthrough(2.5)
-            )
+                    new SleepAction(2.0),
+                    passthrough.runPassthrough(3.0)),
+            new SequentialAction(
+            new SleepAction(2.0),
+            intake.runIntake(3.0)
+    )
     );
 
     Action shooterAndPassthroughAgain = new ParallelAction(
@@ -220,7 +224,7 @@ public class IntakeClass{
             ),
             new SequentialAction(
                     new SleepAction(1.0),
-                    passthrough.runPassthrough(0.75)
+                    passthrough.runPassthrough(0.65)
             )
     );
 

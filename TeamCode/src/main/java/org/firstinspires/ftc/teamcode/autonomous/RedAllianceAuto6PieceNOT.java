@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class RedAllianceAuto6Piece extends LinearOpMode {
+public class RedAllianceAuto6PieceNOT extends LinearOpMode {
 
 public class TimedAction implements Action {
 

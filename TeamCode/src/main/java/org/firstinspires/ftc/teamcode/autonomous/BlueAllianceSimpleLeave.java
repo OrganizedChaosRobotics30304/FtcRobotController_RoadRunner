@@ -59,89 +59,16 @@ public class TimedAction implements Action {
     }
 }
 
-public class ShooterClass {
-
-    private DcMotor shooterLeft, shooterRight;
-
-    public ShooterClass(HardwareMap hardwareMap) {
-
-        shooterLeft = hardwareMap.get(DcMotor.class, "leftShooterMotor");
-        shooterRight = hardwareMap.get(DcMotor.class, "rightShooterMotor");
-
-        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        shooterLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooterRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public Action runShooter(double seconds){
-
-        return new TimedAction(
-        ()-> {
-
-            shooterLeft.setPower(0.98);
-            shooterRight.setPower(0.98);
-        },
-                ()-> {
-
-            shooterLeft.setPower(0.0);
-            shooterRight.setPower(0.0);
-                },
-        seconds);
-
-    }
-}
-public class PassthroughClass{
-
-    private DcMotor passthroughRight, passthroughLeft;
-
-    public PassthroughClass(HardwareMap hardwareMap){
-
-        passthroughLeft = hardwareMap.get(DcMotor.class, "leftPassthroughMotor");
-        passthroughRight = hardwareMap.get(DcMotor.class, "rightPassthroughMotor");
-
-        passthroughLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        passthroughRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        passthroughLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
-
-   public Action runPassthrough(double seconds) {
-
-        return new TimedAction(
-                ()->{
-                    passthroughRight.setPower(1.0);
-                    passthroughLeft.setPower(1.0);
-                },
-                ()->{
-                    passthroughRight.setPower(0.0);
-                    passthroughLeft.setPower(0.0);
-                },
-                seconds
-        );
-   }
-}
-
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(-55, -48, Math.toRadians(0));
+    Pose2d initialPose = new Pose2d(-55, -48, Math.toRadians(180));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
-    ShooterClass shooter = new ShooterClass(hardwareMap);
-    PassthroughClass passthrough = new PassthroughClass(hardwareMap);
-
     TrajectoryActionBuilder moveToLeave = drive.actionBuilder(initialPose)
-            .lineToX(-32)
+            .lineToX(-35)
             .waitSeconds(0.5)
-            .turnTo(Math.toRadians(286.5));
-
-    //.setTangent(Math.toRadians(0))
-            //.splineToLinearHeading(
-                     //new Pose2d(-24, -48,Math.toRadians(267.5)),
-                    //Math.PI / 2
-
-
+            .turnTo(Math.toRadians(252));
     Action actionMoveToLeave = moveToLeave.build();
 
     waitForStart();
