@@ -166,8 +166,8 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToXSplineHeading (36, Math.toRadians(90));
-            //.lineToXSplineHeading(24,Math.toRadians(270));
+            .lineToXSplineHeading (33, Math.toRadians(90));
+            //.lineToXSplineHeading(36,Math.toRadians(90));
 
     Action moveToAlignAction = moveToAlign.build();
 
