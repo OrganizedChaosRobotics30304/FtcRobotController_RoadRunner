@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -22,7 +23,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class RedAllianceAuto6Piece extends LinearOpMode {
+public class BlueAllianceAuto6PieceVelocity extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -62,12 +63,12 @@ public class TimedAction implements Action {
 
 public class ShooterClass {
 
-    private DcMotor shooterLeft, shooterRight;
+    private DcMotorEx shooterLeft, shooterRight;
 
     public ShooterClass(HardwareMap hardwareMap) {
 
-        shooterLeft = hardwareMap.get(DcMotor.class, "leftShooterMotor");
-        shooterRight = hardwareMap.get(DcMotor.class, "rightShooterMotor");
+        shooterLeft = hardwareMap.get(DcMotorEx.class, "leftShooterMotor");
+        shooterRight = hardwareMap.get(DcMotorEx.class, "rightShooterMotor");
 
         shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -79,13 +80,13 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            shooterLeft.setPower(0.82);
-            shooterRight.setPower(0.82);
+            shooterLeft.setVelocity(2000);
+            shooterRight.setVelocity(2000);
         },
                 ()-> {
 
-            shooterLeft.setPower(0.0);
-            shooterRight.setPower(0.0);
+            shooterLeft.setVelocity(0.0);
+            shooterRight.setVelocity(0.0);
                 },
         seconds);
 
@@ -150,7 +151,7 @@ public class IntakeClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63, 16, Math.toRadians(0));
+    Pose2d initialPose = new Pose2d(63, -16, Math.toRadians(0));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
     IntakeClass intake = new IntakeClass(hardwareMap);
@@ -160,36 +161,36 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, 12 ,Math.toRadians(345)),Math.PI / 2);
+                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
     TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToX(34)
-            .turnTo(Math.toRadians(82));
+            .lineToX(32)
+            .turnTo(Math.toRadians(278));
             //.lineToXLinearHeading(26,Math.toRadians(278));
             //.lineToXSplineHeading(24,Math.toRadians(270));
 
     Action moveToAlignAction = moveToAlign.build();
 
     TrajectoryActionBuilder moveToIntake = moveToAlign.endTrajectory().fresh()
-            .setTangent(Math.toRadians(90))
-            .lineToY(61);
+            .setTangent(Math.toRadians(270))
+            .lineToY(-61);
 
     Action moveToIntakeAction = moveToIntake.build();
 
     TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
-            .setTangent(Math.toRadians(270))
-            .splineToLinearHeading(new Pose2d(55, 9, Math.toRadians(344)),Math.PI / 2);
+            .setTangent(Math.toRadians(90))
+            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
 
     Action moveToShootFinalAction = moveToShootFinal.build();
 
     TrajectoryActionBuilder moveToLeave = moveToShootFinal.endTrajectory().fresh()
             //.setTangent(Math.toRadians(180))
-            .setTangent(Math.toRadians(90))
+            .setTangent(Math.toRadians(270))
             //.lineToYSplineHeading (-36, Math.toRadians(279.5));
-            .lineToYSplineHeading (28, Math.toRadians(83));
+            .lineToYSplineHeading (-28, Math.toRadians(277));
 
     Action moveToLeaveAction = moveToLeave.build();
 

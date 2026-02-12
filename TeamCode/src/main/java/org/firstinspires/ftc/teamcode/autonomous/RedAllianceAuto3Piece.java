@@ -151,7 +151,7 @@ public class PassthroughClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63.5, 24, Math.toRadians(90));
+    Pose2d initialPose = new Pose2d(63, 16, Math.toRadians(0));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
     IntakeClass intake = new IntakeClass(hardwareMap);
@@ -161,31 +161,23 @@ public class PassthroughClass{
     TrajectoryActionBuilder moveToShoot = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(48, 0,Math.toRadians(340)),
-                    Math.PI / 2
-            );
+                     new Pose2d(60, 12,Math.toRadians(345)),Math.PI / 2);
 
     Action moveToShootAction = moveToShoot.build();
 
     Action trajectoryActionCloseOut = moveToShoot.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
-            .lineToYSplineHeading (28, Math.toRadians(82.5))
+            .lineToYSplineHeading (36, Math.toRadians(83))
             .build();
-    /*Action shooterAndPassthrough = new ParallelAction(
-            shooter.runShooter(4.0),
-            new SequentialAction(
-                    new SleepAction(1.5),
-                    passthrough.runPassthrough(2.5)
-            )
-    );*/
+
     Action shooterAndPassthrough = new ParallelAction(
-            shooter.runShooter(4.0),
+            shooter.runShooter(3.0),
             new SequentialAction(
-                    new SleepAction(2.0),
-                    passthrough.runPassthrough(3.0)),
+                    new SleepAction(1.0),
+                    passthrough.runPassthrough(2.0)),
             new SequentialAction(
-                    new SleepAction(2.0),
-                    intake.runIntake(3.0)
+                    new SleepAction(1.0),
+                    intake.runIntake(2.0)
             )
     );
 

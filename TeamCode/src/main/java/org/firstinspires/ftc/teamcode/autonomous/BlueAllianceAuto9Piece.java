@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class RedAllianceAuto6Piece extends LinearOpMode {
+public class BlueAllianceAuto9Piece extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -150,7 +150,7 @@ public class IntakeClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63, 16, Math.toRadians(0));
+    Pose2d initialPose = new Pose2d(63, -16, Math.toRadians(0));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
     IntakeClass intake = new IntakeClass(hardwareMap);
@@ -160,40 +160,60 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, 12 ,Math.toRadians(345)),Math.PI / 2);
+                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
-    TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
+    TrajectoryActionBuilder moveToAlignFirstRow = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToX(34)
-            .turnTo(Math.toRadians(82));
+            .lineToX(32)
+            .turnTo(Math.toRadians(278));
             //.lineToXLinearHeading(26,Math.toRadians(278));
             //.lineToXSplineHeading(24,Math.toRadians(270));
 
-    Action moveToAlignAction = moveToAlign.build();
+    Action moveToAlignFirstRowAction = moveToAlignFirstRow.build();
 
-    TrajectoryActionBuilder moveToIntake = moveToAlign.endTrajectory().fresh()
-            .setTangent(Math.toRadians(90))
-            .lineToY(61);
-
-    Action moveToIntakeAction = moveToIntake.build();
-
-    TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
+    TrajectoryActionBuilder moveToIntakeFirstRow = moveToAlignFirstRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .splineToLinearHeading(new Pose2d(55, 9, Math.toRadians(344)),Math.PI / 2);
+            .lineToY(-61);
 
-    Action moveToShootFinalAction = moveToShootFinal.build();
+    Action moveToIntakeFirstRowAction = moveToIntakeFirstRow.build();
 
-    TrajectoryActionBuilder moveToLeave = moveToShootFinal.endTrajectory().fresh()
-            //.setTangent(Math.toRadians(180))
+    TrajectoryActionBuilder moveToShootFirstRow = moveToIntakeFirstRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
+            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
+
+    Action moveToShootFirstRowAction = moveToShootFirstRow.build();
+
+    TrajectoryActionBuilder moveToAlignSecondRow = moveToShootFirstRow.endTrajectory().fresh()
+            .turnTo(Math.toRadians(0))
+            .setTangent(180)
+            .lineToXLinearHeading(8, Math.toRadians(278));
+            //.turnTo(Math.toRadians(278));
+
+    Action moveToAlignSecondRowAction = moveToAlignSecondRow.build();
+
+    TrajectoryActionBuilder moveToIntakeSecondRow = moveToAlignSecondRow.endTrajectory().fresh()
+            .setTangent(Math.toRadians(270))
+            .lineToY(-61);
+
+    Action moveToIntakeSecondRowAction = moveToIntakeSecondRow.build();
+
+    TrajectoryActionBuilder moveToShootSecondRow = moveToIntakeSecondRow.endTrajectory().fresh()
+            .setTangent(Math.toRadians(90))
+            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
+
+    Action moveToShootSecondRowAction = moveToShootSecondRow.build();
+
+    TrajectoryActionBuilder moveToLeave = moveToShootSecondRow.endTrajectory().fresh()
+            //.setTangent(Math.toRadians(180))
+            .setTangent(Math.toRadians(270))
             //.lineToYSplineHeading (-36, Math.toRadians(279.5));
-            .lineToYSplineHeading (28, Math.toRadians(83));
+            .lineToYSplineHeading (-28, Math.toRadians(277));
 
     Action moveToLeaveAction = moveToLeave.build();
 
-    Action shooterAndPassthrough = new ParallelAction(
+    Action shooterAndPassthroughPreLoad = new ParallelAction(
             shooter.runShooter(3.0),//3.0
             new SequentialAction(
                     new SleepAction(1.0),//1.0
@@ -204,7 +224,7 @@ public class IntakeClass{
     )
     );
 
-    Action shooterAndPassthroughAgain = new ParallelAction(
+    Action shooterAndPassthroughFirstRow = new ParallelAction(
             shooter.runShooter(3.0),//3.0
             new SequentialAction(
                     new SleepAction(1.0),//1.0
@@ -216,8 +236,20 @@ public class IntakeClass{
             )
     );
 
-     Action intakeAndMovement = new ParallelAction(
-            moveToIntakeAction,
+    Action shooterAndPassthroughSecondRow = new ParallelAction(
+            shooter.runShooter(3.0),//3.0
+            new SequentialAction(
+                    new SleepAction(1.0),//1.0
+                    passthrough.runPassthrough(2.0)//2.5
+            ),
+            new SequentialAction(
+                    new SleepAction(1.0),//1.0
+                    intake.runIntake(2.0)//2.5
+            )
+    );
+
+     Action intakeAndMovementFirstRow = new ParallelAction(
+            moveToIntakeFirstRowAction,
             new SequentialAction(
                     //new SleepAction(0.3),
                     //new SleepAction(0.2),
@@ -230,17 +262,34 @@ public class IntakeClass{
             )
     );
 
+    Action intakeAndMovementSecondRow = new ParallelAction(
+            moveToIntakeSecondRowAction,
+            new SequentialAction(
+                    //new SleepAction(0.3),
+                    //new SleepAction(0.2),
+                    intake.runIntake(2.0)
+
+            ),
+            new SequentialAction(
+                    new SleepAction(0.86),
+                    passthrough.runPassthrough(0.467)
+            )
+    );
 
     waitForStart();
 
     Actions.runBlocking(
             new SequentialAction(
                     moveToShootPreloadAction,
-                    shooterAndPassthrough,
-                    moveToAlignAction,
-                    intakeAndMovement,
-                    moveToShootFinalAction,
-                    shooterAndPassthroughAgain,
+                    shooterAndPassthroughPreLoad,
+                    moveToAlignFirstRowAction,
+                    intakeAndMovementFirstRow,
+                    moveToShootFirstRowAction,
+                    shooterAndPassthroughFirstRow,
+                    moveToAlignSecondRowAction,
+                    moveToIntakeSecondRowAction,
+                    moveToShootSecondRowAction,
+                    shooterAndPassthroughSecondRow,
                     moveToLeaveAction
 
             )
