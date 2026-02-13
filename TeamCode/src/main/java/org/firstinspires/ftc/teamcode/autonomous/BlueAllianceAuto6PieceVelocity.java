@@ -80,8 +80,8 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            shooterLeft.setVelocity(2000);
-            shooterRight.setVelocity(2000);
+            shooterLeft.setVelocity(1930);
+            shooterRight.setVelocity(1930);
         },
                 ()-> {
 
@@ -161,7 +161,7 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
+                     new Pose2d(60, -12 ,Math.toRadians(15)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
@@ -182,7 +182,7 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
+            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(15)),Math.PI / 2);
 
     Action moveToShootFinalAction = moveToShootFinal.build();
 
