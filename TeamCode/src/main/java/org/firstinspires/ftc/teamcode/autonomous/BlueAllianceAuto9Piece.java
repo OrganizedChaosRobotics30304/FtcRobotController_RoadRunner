@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -62,35 +63,52 @@ public class TimedAction implements Action {
 
 public class ShooterClass {
 
-    private DcMotor shooterLeft, shooterRight;
+    private DcMotorEx shooterLeft, shooterRight;
 
     public ShooterClass(HardwareMap hardwareMap) {
 
-        shooterLeft = hardwareMap.get(DcMotor.class, "leftShooterMotor");
-        shooterRight = hardwareMap.get(DcMotor.class, "rightShooterMotor");
+        shooterLeft = hardwareMap.get(DcMotorEx.class, "leftShooterMotor");
+        shooterRight = hardwareMap.get(DcMotorEx.class, "rightShooterMotor");
 
-        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterLeft.setDirection(DcMotorEx.Direction.REVERSE);
 
-        shooterLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooterRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        shooterRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
-    public Action runShooter(double seconds){
+    public Action runShooterPreload(double seconds) {
 
         return new TimedAction(
-        ()-> {
-            shooterLeft.setPower(0.82);
-            shooterRight.setPower(0.82);
-        },
-                ()-> {
-
-            shooterLeft.setPower(0.0);
-            shooterRight.setPower(0.0);
+                () -> {
+                    shooterLeft.setVelocity(1925);
+                    shooterRight.setVelocity(1925);
                 },
-        seconds);
+                () -> {
+
+                    shooterLeft.setVelocity(0.0);
+                    shooterRight.setVelocity(0.0);
+                },
+                seconds);
+
+    }
+
+    public Action runShooterPickUps(double seconds) {
+
+        return new TimedAction(
+                () -> {
+                    shooterLeft.setVelocity(1910);
+                    shooterRight.setVelocity(1910);
+                },
+                () -> {
+
+                    shooterLeft.setVelocity(0.0);
+                    shooterRight.setVelocity(0.0);
+                },
+                seconds);
 
     }
 }
+
 public class PassthroughClass{
 
     private DcMotor passthroughRight, passthroughLeft;
@@ -160,7 +178,7 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
+                     new Pose2d(55, -12, Math.toRadians(15)),Math.PI / 2);//y-12
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
@@ -175,33 +193,35 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToIntakeFirstRow = moveToAlignFirstRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .lineToY(-61);
+            .lineToY(-59);
 
     Action moveToIntakeFirstRowAction = moveToIntakeFirstRow.build();
 
     TrajectoryActionBuilder moveToShootFirstRow = moveToIntakeFirstRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
+            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(13)),Math.PI / 2);//y-9
 
     Action moveToShootFirstRowAction = moveToShootFirstRow.build();
 
     TrajectoryActionBuilder moveToAlignSecondRow = moveToShootFirstRow.endTrajectory().fresh()
-            .turnTo(Math.toRadians(0))
             .setTangent(180)
-            .lineToXLinearHeading(8, Math.toRadians(278));
+            .turnTo(Math.toRadians(0))
+            .lineToX(6)
+            .turnTo(Math.toRadians(278));
+            //.lineToXLinearHeading(8, Math.toRadians(278));
             //.turnTo(Math.toRadians(278));
 
     Action moveToAlignSecondRowAction = moveToAlignSecondRow.build();
 
     TrajectoryActionBuilder moveToIntakeSecondRow = moveToAlignSecondRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .lineToY(-61);
+            .lineToY(-56);
 
     Action moveToIntakeSecondRowAction = moveToIntakeSecondRow.build();
 
     TrajectoryActionBuilder moveToShootSecondRow = moveToIntakeSecondRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
+            .splineToLinearHeading(new Pose2d(55, -3, Math.toRadians(13)),Math.PI / 2);
 
     Action moveToShootSecondRowAction = moveToShootSecondRow.build();
 
@@ -209,42 +229,42 @@ public class IntakeClass{
             //.setTangent(Math.toRadians(180))
             .setTangent(Math.toRadians(270))
             //.lineToYSplineHeading (-36, Math.toRadians(279.5));
-            .lineToYSplineHeading (-28, Math.toRadians(277));
+            .lineToYLinearHeading (-13, Math.toRadians(285));
 
     Action moveToLeaveAction = moveToLeave.build();
 
     Action shooterAndPassthroughPreLoad = new ParallelAction(
-            shooter.runShooter(3.0),//3.0
+            shooter.runShooterPreload(2.6),//3.0
             new SequentialAction(
-                    new SleepAction(1.0),//1.0
-                    passthrough.runPassthrough(2.0)),//3.0
+                    new SleepAction(0.7),//1.0
+                    passthrough.runPassthrough(1.9)),//2.0
             new SequentialAction(
-            new SleepAction(1.0),//1.0
-            intake.runIntake(2.0)//3.0
+            new SleepAction(0.7),//1.0
+            intake.runIntake(1.9)//2.0
     )
     );
 
     Action shooterAndPassthroughFirstRow = new ParallelAction(
-            shooter.runShooter(3.0),//3.0
+            shooter.runShooterPickUps(2.6),//3.0
             new SequentialAction(
-                    new SleepAction(1.0),//1.0
-                    passthrough.runPassthrough(2.0)//2.5
+                    new SleepAction(0.7),//1.0
+                    passthrough.runPassthrough(1.9)//2.0
             ),
             new SequentialAction(
-                   new SleepAction(1.0),//1.0
-                   intake.runIntake(2.0)//2.5
+                   new SleepAction(0.7),//1.0
+                   intake.runIntake(1.9)//2.0
             )
     );
 
     Action shooterAndPassthroughSecondRow = new ParallelAction(
-            shooter.runShooter(3.0),//3.0
+            shooter.runShooterPickUps(2.6),//3.0
             new SequentialAction(
-                    new SleepAction(1.0),//1.0
-                    passthrough.runPassthrough(2.0)//2.5
+                    new SleepAction(0.7),//1.0
+                    passthrough.runPassthrough(1.9)//2.0
             ),
             new SequentialAction(
-                    new SleepAction(1.0),//1.0
-                    intake.runIntake(2.0)//2.5
+                    new SleepAction(0.7),//1.0
+                    intake.runIntake(1.9)//2.0
             )
     );
 
@@ -258,7 +278,7 @@ public class IntakeClass{
             ),
             new SequentialAction(
                     new SleepAction(0.86),
-                    passthrough.runPassthrough(0.467)
+                    passthrough.runPassthrough(0.47)
             )
     );
 
@@ -272,7 +292,7 @@ public class IntakeClass{
             ),
             new SequentialAction(
                     new SleepAction(0.86),
-                    passthrough.runPassthrough(0.467)
+                    passthrough.runPassthrough(0.47)
             )
     );
 
@@ -287,7 +307,7 @@ public class IntakeClass{
                     moveToShootFirstRowAction,
                     shooterAndPassthroughFirstRow,
                     moveToAlignSecondRowAction,
-                    moveToIntakeSecondRowAction,
+                    intakeAndMovementSecondRow,
                     moveToShootSecondRowAction,
                     shooterAndPassthroughSecondRow,
                     moveToLeaveAction
