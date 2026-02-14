@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class BlueAllianceAuto6PieceVelocity extends LinearOpMode {
+public class BlueAllianceAuto9PieceVelocity extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -70,36 +70,36 @@ public class ShooterClass {
         shooterLeft = hardwareMap.get(DcMotorEx.class, "leftShooterMotor");
         shooterRight = hardwareMap.get(DcMotorEx.class, "rightShooterMotor");
 
-        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterLeft.setDirection(DcMotorEx.Direction.REVERSE);
 
-        shooterLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooterRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        shooterRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
-    public Action runShooter(double seconds){
+    public Action runShooterPreload(double seconds) {
 
         return new TimedAction(
-        ()-> {
-            shooterLeft.setVelocity(1925);
-            shooterRight.setVelocity(1925);
-        },
-                ()-> {
-
-            shooterLeft.setVelocity(0.0);
-            shooterRight.setVelocity(0.0);
+                () -> {
+                    shooterLeft.setVelocity(1925);
+                    shooterRight.setVelocity(1925);
                 },
-        seconds);
+                () -> {
+
+                    shooterLeft.setVelocity(0.0);
+                    shooterRight.setVelocity(0.0);
+                },
+                seconds);
 
     }
 
-    public Action runShooterAgain(double seconds){
+    public Action runShooterPickUps(double seconds) {
 
         return new TimedAction(
-                ()-> {
-                    shooterLeft.setVelocity(1903);
-                    shooterRight.setVelocity(1903);
+                () -> {
+                    shooterLeft.setVelocity(1910);
+                    shooterRight.setVelocity(1910);
                 },
-                ()-> {
+                () -> {
 
                     shooterLeft.setVelocity(0.0);
                     shooterRight.setVelocity(0.0);
@@ -108,6 +108,7 @@ public class ShooterClass {
 
     }
 }
+
 public class PassthroughClass{
 
     private DcMotor passthroughRight, passthroughLeft;
@@ -177,80 +178,138 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
+                     new Pose2d(55, -12, Math.toRadians(15)),Math.PI / 2);//y-12
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
-    TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
+    TrajectoryActionBuilder moveToAlignFirstRow = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
             .lineToX(32)
             .turnTo(Math.toRadians(278));
+            //.lineToXLinearHeading(26,Math.toRadians(278));
+            //.lineToXSplineHeading(24,Math.toRadians(270));
 
-    Action moveToAlignAction = moveToAlign.build();
+    Action moveToAlignFirstRowAction = moveToAlignFirstRow.build();
 
-    TrajectoryActionBuilder moveToIntake = moveToAlign.endTrajectory().fresh()
+    TrajectoryActionBuilder moveToIntakeFirstRow = moveToAlignFirstRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .lineToY(-61);
+            .lineToY(-59);
 
-    Action moveToIntakeAction = moveToIntake.build();
+    Action moveToIntakeFirstRowAction = moveToIntakeFirstRow.build();
 
-    TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
+    TrajectoryActionBuilder moveToShootFirstRow = moveToIntakeFirstRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
+            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(13)),Math.PI / 2);//y-9
 
-    Action moveToShootFinalAction = moveToShootFinal.build();
+    Action moveToShootFirstRowAction = moveToShootFirstRow.build();
 
-    TrajectoryActionBuilder moveToLeave = moveToShootFinal.endTrajectory().fresh()
+    TrajectoryActionBuilder moveToAlignSecondRow = moveToShootFirstRow.endTrajectory().fresh()
+            .setTangent(180)
+            .turnTo(Math.toRadians(0))
+            .lineToX(6)
+            .turnTo(Math.toRadians(278));
+            //.lineToXLinearHeading(8, Math.toRadians(278));
+            //.turnTo(Math.toRadians(278));
+
+    Action moveToAlignSecondRowAction = moveToAlignSecondRow.build();
+
+    TrajectoryActionBuilder moveToIntakeSecondRow = moveToAlignSecondRow.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .lineToYSplineHeading (-28, Math.toRadians(277));
+            .lineToY(-56);
+
+    Action moveToIntakeSecondRowAction = moveToIntakeSecondRow.build();
+
+    TrajectoryActionBuilder moveToShootSecondRow = moveToIntakeSecondRow.endTrajectory().fresh()
+            .setTangent(Math.toRadians(90))
+            .splineToLinearHeading(new Pose2d(55, -3, Math.toRadians(13)),Math.PI / 2);
+
+    Action moveToShootSecondRowAction = moveToShootSecondRow.build();
+
+    TrajectoryActionBuilder moveToLeave = moveToShootSecondRow.endTrajectory().fresh()
+            //.setTangent(Math.toRadians(180))
+            .setTangent(Math.toRadians(270))
+            //.lineToYSplineHeading (-36, Math.toRadians(279.5));
+            .lineToYLinearHeading (-13, Math.toRadians(285));
 
     Action moveToLeaveAction = moveToLeave.build();
 
-    Action shooterAndPassthrough = new ParallelAction(
-            shooter.runShooter(3.0),
+    Action shooterAndPassthroughPreLoad = new ParallelAction(
+            shooter.runShooterPreload(2.6),//3.0
             new SequentialAction(
-                    new SleepAction(1.0),
-                    passthrough.runPassthrough(2.0)),
+                    new SleepAction(0.7),//1.0
+                    passthrough.runPassthrough(1.9)),//2.0
             new SequentialAction(
-                    new SleepAction(1.0),
-                    intake.runIntake(2.0)
+            new SleepAction(0.7),//1.0
+            intake.runIntake(1.9)//2.0
     )
     );
 
-    Action shooterAndPassthroughAgain = new ParallelAction(
-            shooter.runShooterAgain(3.0),
+    Action shooterAndPassthroughFirstRow = new ParallelAction(
+            shooter.runShooterPickUps(2.6),//3.0
             new SequentialAction(
-                    new SleepAction(1.0),
-                    passthrough.runPassthrough(2.0)
+                    new SleepAction(0.7),//1.0
+                    passthrough.runPassthrough(1.9)//2.0
             ),
             new SequentialAction(
-                   new SleepAction(1.0),
-                   intake.runIntake(2.0)
+                   new SleepAction(0.7),//1.0
+                   intake.runIntake(1.9)//2.0
             )
     );
 
-     Action intakeAndMovement = new ParallelAction(
-            moveToIntakeAction,
+    Action shooterAndPassthroughSecondRow = new ParallelAction(
+            shooter.runShooterPickUps(2.6),//3.0
             new SequentialAction(
+                    new SleepAction(0.7),//1.0
+                    passthrough.runPassthrough(1.9)//2.0
+            ),
+            new SequentialAction(
+                    new SleepAction(0.7),//1.0
+                    intake.runIntake(1.9)//2.0
+            )
+    );
+
+     Action intakeAndMovementFirstRow = new ParallelAction(
+            moveToIntakeFirstRowAction,
+            new SequentialAction(
+                    //new SleepAction(0.3),
+                    //new SleepAction(0.2),
                     intake.runIntake(2.0)
+
             ),
             new SequentialAction(
                     new SleepAction(0.86),
-                    passthrough.runPassthrough(0.467)
+                    passthrough.runPassthrough(0.47)
             )
     );
 
+    Action intakeAndMovementSecondRow = new ParallelAction(
+            moveToIntakeSecondRowAction,
+            new SequentialAction(
+                    //new SleepAction(0.3),
+                    //new SleepAction(0.2),
+                    intake.runIntake(2.0)
+
+            ),
+            new SequentialAction(
+                    new SleepAction(0.86),
+                    passthrough.runPassthrough(0.47)
+            )
+    );
 
     waitForStart();
 
     Actions.runBlocking(
             new SequentialAction(
                     moveToShootPreloadAction,
-                    shooterAndPassthrough,
-                    moveToAlignAction,
-                    intakeAndMovement,
-                    moveToShootFinalAction,
-                    shooterAndPassthroughAgain,
+                    shooterAndPassthroughPreLoad,
+                    moveToAlignFirstRowAction,
+                    intakeAndMovementFirstRow,
+                    moveToShootFirstRowAction,
+                    shooterAndPassthroughFirstRow,
+                    moveToAlignSecondRowAction,
+                    intakeAndMovementSecondRow,
+                    moveToShootSecondRowAction,
+                    shooterAndPassthroughSecondRow,
                     moveToLeaveAction
 
             )

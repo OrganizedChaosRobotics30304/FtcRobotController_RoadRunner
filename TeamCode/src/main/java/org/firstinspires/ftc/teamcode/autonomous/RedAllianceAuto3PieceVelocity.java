@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class BlueAllianceAuto3PieceVelocity extends LinearOpMode {
+public class RedAllianceAuto3PieceVelocity extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -92,6 +92,7 @@ public class ShooterClass {
 
     }
 }
+
 public class PassthroughClass{
 
     private DcMotor passthroughRight, passthroughLeft;
@@ -151,7 +152,7 @@ public class IntakeClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63, -16, Math.toRadians(0));
+    Pose2d initialPose = new Pose2d(63, 16, Math.toRadians(0));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
     IntakeClass intake = new IntakeClass(hardwareMap);
@@ -161,13 +162,13 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
+                     new Pose2d(60, 12 ,Math.toRadians(346)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
     TrajectoryActionBuilder moveToLeave = moveToShootPreload.endTrajectory().fresh()
-            .setTangent(Math.toRadians(270))
-            .lineToYSplineHeading (-28, Math.toRadians(277));
+            .setTangent(Math.toRadians(90))
+            .lineToYSplineHeading (28, Math.toRadians(83));
 
     Action moveToLeaveAction = moveToLeave.build();
 
