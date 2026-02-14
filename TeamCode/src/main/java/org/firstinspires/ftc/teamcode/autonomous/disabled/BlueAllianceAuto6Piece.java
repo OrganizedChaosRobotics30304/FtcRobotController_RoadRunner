@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.disabled;
 
 import androidx.annotation.NonNull;
 
@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,8 +22,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
-@Autonomous
-public class RedAllianceAuto6Piece extends LinearOpMode {
+//@Autonomous
+@Disabled
+public class BlueAllianceAuto6Piece extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -150,7 +152,7 @@ public class IntakeClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63, 16, Math.toRadians(0));
+    Pose2d initialPose = new Pose2d(63, -16, Math.toRadians(0));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
     IntakeClass intake = new IntakeClass(hardwareMap);
@@ -160,36 +162,36 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, 12 ,Math.toRadians(345)),Math.PI / 2);
+                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
     TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToX(34)
-            .turnTo(Math.toRadians(82));
+            .lineToX(32)
+            .turnTo(Math.toRadians(278));
             //.lineToXLinearHeading(26,Math.toRadians(278));
             //.lineToXSplineHeading(24,Math.toRadians(270));
 
     Action moveToAlignAction = moveToAlign.build();
 
     TrajectoryActionBuilder moveToIntake = moveToAlign.endTrajectory().fresh()
-            .setTangent(Math.toRadians(90))
-            .lineToY(61);
+            .setTangent(Math.toRadians(270))
+            .lineToY(-61);
 
     Action moveToIntakeAction = moveToIntake.build();
 
     TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
-            .setTangent(Math.toRadians(270))
-            .splineToLinearHeading(new Pose2d(55, 9, Math.toRadians(344)),Math.PI / 2);
+            .setTangent(Math.toRadians(90))
+            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
 
     Action moveToShootFinalAction = moveToShootFinal.build();
 
     TrajectoryActionBuilder moveToLeave = moveToShootFinal.endTrajectory().fresh()
             //.setTangent(Math.toRadians(180))
-            .setTangent(Math.toRadians(90))
+            .setTangent(Math.toRadians(270))
             //.lineToYSplineHeading (-36, Math.toRadians(279.5));
-            .lineToYSplineHeading (28, Math.toRadians(83));
+            .lineToYSplineHeading (-28, Math.toRadians(277));
 
     Action moveToLeaveAction = moveToLeave.build();
 

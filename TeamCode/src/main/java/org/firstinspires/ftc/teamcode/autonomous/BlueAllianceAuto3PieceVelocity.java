@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -22,7 +23,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class BlueAllianceAuto3Piece extends LinearOpMode {
+public class BlueAllianceAuto3PieceVelocity extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -62,12 +63,12 @@ public class TimedAction implements Action {
 
 public class ShooterClass {
 
-    private DcMotor shooterLeft, shooterRight;
+    private DcMotorEx shooterLeft, shooterRight;
 
     public ShooterClass(HardwareMap hardwareMap) {
 
-        shooterLeft = hardwareMap.get(DcMotor.class, "leftShooterMotor");
-        shooterRight = hardwareMap.get(DcMotor.class, "rightShooterMotor");
+        shooterLeft = hardwareMap.get(DcMotorEx.class, "leftShooterMotor");
+        shooterRight = hardwareMap.get(DcMotorEx.class, "rightShooterMotor");
 
         shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -79,16 +80,31 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-
-            shooterLeft.setPower(0.82);
-            shooterRight.setPower(0.82);
+            shooterLeft.setVelocity(1925);
+            shooterRight.setVelocity(1925);
         },
                 ()-> {
 
-            shooterLeft.setPower(0.0);
-            shooterRight.setPower(0.0);
+            shooterLeft.setVelocity(0.0);
+            shooterRight.setVelocity(0.0);
                 },
         seconds);
+
+    }
+
+    public Action runShooterAgain(double seconds){
+
+        return new TimedAction(
+                ()-> {
+                    shooterLeft.setVelocity(1903);
+                    shooterRight.setVelocity(1903);
+                },
+                ()-> {
+
+                    shooterLeft.setVelocity(0.0);
+                    shooterRight.setVelocity(0.0);
+                },
+                seconds);
 
     }
 }
@@ -123,31 +139,31 @@ public class PassthroughClass{
    }
 }
 
-    public class IntakeClass{
-        private CRServo intakeRight, intakeLeft;
+public class IntakeClass{
+    private CRServo intakeRight, intakeLeft;
 
-        public IntakeClass(HardwareMap hardwareMap){
-            intakeRight = hardwareMap.get(CRServo.class, "rightIntakeServo");
-            intakeLeft = hardwareMap.get(CRServo.class, "leftIntakeServo");
+    public IntakeClass(HardwareMap hardwareMap){
+        intakeRight = hardwareMap.get(CRServo.class, "rightIntakeServo");
+        intakeLeft = hardwareMap.get(CRServo.class, "leftIntakeServo");
 
-            intakeLeft.setDirection(CRServo.Direction.REVERSE);
-        }
-
-        public Action runIntake(double seconds) {
-
-            return new TimedAction(
-                    ()->{
-                        intakeLeft.setPower(-1.0);
-                        intakeRight.setPower(-1.0);
-                    },
-                    ()->{
-                        intakeLeft.setPower(0.0);
-                        intakeRight.setPower(0.0);
-                    },
-                    seconds
-            );
-        }
+        intakeLeft.setDirection(CRServo.Direction.REVERSE);
     }
+
+    public Action runIntake(double seconds) {
+
+        return new TimedAction(
+                ()->{
+                    intakeLeft.setPower(-1.0);
+                    intakeRight.setPower(-1.0);
+                },
+                ()->{
+                    intakeLeft.setPower(0.0);
+                    intakeRight.setPower(0.0);
+                },
+                seconds
+        );
+    }
+}
 
 @Override
   public void runOpMode(){
@@ -158,19 +174,18 @@ public class PassthroughClass{
     ShooterClass shooter = new ShooterClass(hardwareMap);
     PassthroughClass passthrough = new PassthroughClass(hardwareMap);
 
-    TrajectoryActionBuilder moveToShoot = drive.actionBuilder(initialPose)
+    TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, -12,Math.toRadians(15)),
-                    Math.PI / 2
-            );
+                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
 
-    Action moveToShootAction = moveToShoot.build();
+    Action moveToShootPreloadAction = moveToShootPreload.build();
 
-    Action trajectoryActionCloseOut = moveToShoot.endTrajectory().fresh()
+    TrajectoryActionBuilder moveToLeave = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .lineToYSplineHeading (-36, Math.toRadians(277))
-            .build();
+            .lineToYSplineHeading (-28, Math.toRadians(277));
+
+    Action moveToLeaveAction = moveToLeave.build();
 
     Action shooterAndPassthrough = new ParallelAction(
             shooter.runShooter(3.0),
@@ -178,20 +193,20 @@ public class PassthroughClass{
                     new SleepAction(1.0),
                     passthrough.runPassthrough(2.0)),
             new SequentialAction(
-                    new SleepAction(1.0),
-                    intake.runIntake(2.0)
-            )
+            new SleepAction(1.0),
+            intake.runIntake(2.0)
+        )
     );
 
     waitForStart();
 
     Actions.runBlocking(
             new SequentialAction(
-                    moveToShootAction,
+                    moveToShootPreloadAction,
                     shooterAndPassthrough,
-                    trajectoryActionCloseOut
+                    moveToLeaveAction
             )
     );
 
-}
+    }
 }

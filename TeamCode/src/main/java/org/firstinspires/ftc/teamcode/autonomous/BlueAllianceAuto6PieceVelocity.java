@@ -80,8 +80,8 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            shooterLeft.setVelocity(1930);
-            shooterRight.setVelocity(1930);
+            shooterLeft.setVelocity(1925);
+            shooterRight.setVelocity(1925);
         },
                 ()-> {
 
@@ -89,6 +89,22 @@ public class ShooterClass {
             shooterRight.setVelocity(0.0);
                 },
         seconds);
+
+    }
+
+    public Action runShooterAgain(double seconds){
+
+        return new TimedAction(
+                ()-> {
+                    shooterLeft.setVelocity(1903);
+                    shooterRight.setVelocity(1903);
+                },
+                ()-> {
+
+                    shooterLeft.setVelocity(0.0);
+                    shooterRight.setVelocity(0.0);
+                },
+                seconds);
 
     }
 }
@@ -161,7 +177,7 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(60, -12 ,Math.toRadians(15)),Math.PI / 2);
+                     new Pose2d(60, -12 ,Math.toRadians(14)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
@@ -182,7 +198,7 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(15)),Math.PI / 2);
+            .splineToLinearHeading(new Pose2d(55, -9, Math.toRadians(14)),Math.PI / 2);
 
     Action moveToShootFinalAction = moveToShootFinal.build();
 
@@ -206,7 +222,7 @@ public class IntakeClass{
     );
 
     Action shooterAndPassthroughAgain = new ParallelAction(
-            shooter.runShooter(3.0),//3.0
+            shooter.runShooterAgain(3.0),//3.0
             new SequentialAction(
                     new SleepAction(1.0),//1.0
                     passthrough.runPassthrough(2.0)//2.5
