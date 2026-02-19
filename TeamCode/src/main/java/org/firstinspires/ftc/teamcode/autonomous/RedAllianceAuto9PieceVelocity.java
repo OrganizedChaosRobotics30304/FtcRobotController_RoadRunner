@@ -178,13 +178,14 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                     new Pose2d(55, 12, Math.toRadians(345)),Math.PI / 2);
+                    new Pose2d(60, 12 ,Math.toRadians(346)),Math.PI / 2);
+                     //new Pose2d(55, 12, Math.toRadians(345)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
     TrajectoryActionBuilder moveToAlignFirstRow = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToX(32)
+            .lineToX(33)//32
             .turnTo(Math.toRadians(82));
 
     Action moveToAlignFirstRowAction = moveToAlignFirstRow.build();

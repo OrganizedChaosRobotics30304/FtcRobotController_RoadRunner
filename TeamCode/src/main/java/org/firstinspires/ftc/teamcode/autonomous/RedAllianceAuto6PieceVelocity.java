@@ -80,8 +80,8 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            shooterLeft.setVelocity(1925);
-            shooterRight.setVelocity(1925);
+            shooterLeft.setVelocity(1990);
+            shooterRight.setVelocity(1990);
         },
                 ()-> {
 
@@ -96,8 +96,8 @@ public class ShooterClass {
 
         return new TimedAction(
                 ()-> {
-                    shooterLeft.setVelocity(1903);
-                    shooterRight.setVelocity(1903);
+                    shooterLeft.setVelocity(1960);//45
+                    shooterRight.setVelocity(1960);
                 },
                 ()-> {
 
@@ -183,14 +183,14 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToAlign = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
-            .lineToX(32)
+            .lineToX(33)
             .turnTo(Math.toRadians(82));
 
     Action moveToAlignAction = moveToAlign.build();
 
     TrajectoryActionBuilder moveToIntake = moveToAlign.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
-            .lineToY(61);
+            .lineToY(59);//61
 
     Action moveToIntakeAction = moveToIntake.build();
 
