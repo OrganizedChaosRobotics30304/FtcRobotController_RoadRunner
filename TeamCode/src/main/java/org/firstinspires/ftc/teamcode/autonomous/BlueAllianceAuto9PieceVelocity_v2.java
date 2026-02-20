@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Config
 @Autonomous
-public class RedAllianceAuto9PieceVelocity extends LinearOpMode {
+public class BlueAllianceAuto9PieceVelocity_v2 extends LinearOpMode {
 
 public class TimedAction implements Action {
 
@@ -168,7 +168,7 @@ public class IntakeClass{
 
 @Override
   public void runOpMode(){
-    Pose2d initialPose = new Pose2d(63, 16, Math.toRadians(0));
+    Pose2d initialPose = new Pose2d(63, -16, Math.toRadians(0));
 
     MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
     IntakeClass intake = new IntakeClass(hardwareMap);
@@ -176,9 +176,9 @@ public class IntakeClass{
     PassthroughClass passthrough = new PassthroughClass(hardwareMap);
 
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
-            .setTangent(Math.toRadians(180))
+            .setTangent(Math.toRadians(190))
             .splineToLinearHeading(
-                    new Pose2d(60, 12 ,Math.toRadians(345)),Math.PI / 2);
+                    new Pose2d(60, -12 ,Math.toRadians(15)),Math.PI / 2);
                      //new Pose2d(55, 12, Math.toRadians(345)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
@@ -186,19 +186,19 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToAlignFirstRow = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(180))
             .lineToX(33)//32
-            .turnTo(Math.toRadians(82));
+            .turnTo(Math.toRadians(278));
 
     Action moveToAlignFirstRowAction = moveToAlignFirstRow.build();
 
     TrajectoryActionBuilder moveToIntakeFirstRow = moveToAlignFirstRow.endTrajectory().fresh()
-            .setTangent(Math.toRadians(90))
-            .lineToY(59);
+            .setTangent(Math.toRadians(270))
+            .lineToY(-59);
 
     Action moveToIntakeFirstRowAction = moveToIntakeFirstRow.build();
 
     TrajectoryActionBuilder moveToShootFirstRow = moveToIntakeFirstRow.endTrajectory().fresh()
-            .setTangent(Math.toRadians(270))
-            .splineToLinearHeading(new Pose2d(55, 13, Math.toRadians(345)),Math.PI / 2);
+            .setTangent(Math.toRadians(90))
+            .splineToLinearHeading(new Pose2d(55, -13, Math.toRadians(15)),Math.PI / 2);
 
     Action moveToShootFirstRowAction = moveToShootFirstRow.build();
 
@@ -206,19 +206,19 @@ public class IntakeClass{
             .setTangent(180)
             .turnTo(Math.toRadians(0))
             .lineToX(14)
-            .turnTo(Math.toRadians(82));
+            .turnTo(Math.toRadians(278));
 
     Action moveToAlignSecondRowAction = moveToAlignSecondRow.build();
 
     TrajectoryActionBuilder moveToIntakeSecondRow = moveToAlignSecondRow.endTrajectory().fresh()
-            .setTangent(Math.toRadians(90))
-            .lineToY(61);
+            .setTangent(Math.toRadians(270))
+            .lineToY(-61);
 
     Action moveToIntakeSecondRowAction = moveToIntakeSecondRow.build();
 
     TrajectoryActionBuilder moveToShootSecondRow = moveToIntakeSecondRow.endTrajectory().fresh()
-            .setTangent(Math.toRadians(270))
-            .splineToLinearHeading(new Pose2d(59, 17, Math.toRadians(345)),Math.PI / 2);
+            .setTangent(Math.toRadians(90))
+            .splineToLinearHeading(new Pose2d(59, -17, Math.toRadians(15)),Math.PI / 2);
 
     Action moveToShootSecondRowAction = moveToShootSecondRow.build();
 
@@ -227,7 +227,7 @@ public class IntakeClass{
            // .lineToYLinearHeading (13, Math.toRadians(75));
             .setTangent(Math.toRadians(180))
             .lineToX(54)
-            .turnTo(Math.toRadians(70));
+            .turnTo(Math.toRadians(290));
 
     Action moveToLeaveAction = moveToLeave.build();
 

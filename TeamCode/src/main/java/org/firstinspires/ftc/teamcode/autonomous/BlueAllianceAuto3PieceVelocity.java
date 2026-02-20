@@ -80,8 +80,8 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            shooterLeft.setVelocity(1925);
-            shooterRight.setVelocity(1925);
+            shooterLeft.setVelocity(1990);
+            shooterRight.setVelocity(1990);
         },
                 ()-> {
 

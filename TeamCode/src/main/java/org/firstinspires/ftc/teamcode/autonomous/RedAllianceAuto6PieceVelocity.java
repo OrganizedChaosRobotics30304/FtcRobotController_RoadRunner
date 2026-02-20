@@ -80,8 +80,8 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            shooterLeft.setVelocity(1990);
-            shooterRight.setVelocity(1990);
+            shooterLeft.setVelocity(1995);
+            shooterRight.setVelocity(1995);
         },
                 ()-> {
 
@@ -177,7 +177,7 @@ public class IntakeClass{
     TrajectoryActionBuilder moveToShootPreload = drive.actionBuilder(initialPose)
             .setTangent(Math.toRadians(180))
             .splineToLinearHeading(
-                    new Pose2d(60, 12 ,Math.toRadians(346)),Math.PI / 2);
+                    new Pose2d(60, 12 ,Math.toRadians(345)),Math.PI / 2);
 
     Action moveToShootPreloadAction = moveToShootPreload.build();
 
@@ -196,7 +196,7 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .splineToLinearHeading(new Pose2d(55, 9, Math.toRadians(346)),Math.PI / 2);
+            .splineToLinearHeading(new Pose2d(55, 13, Math.toRadians(345)),Math.PI / 2);//346
 
     Action moveToShootFinalAction = moveToShootFinal.build();
 
@@ -207,13 +207,13 @@ public class IntakeClass{
     Action moveToLeaveAction = moveToLeave.build();
 
     Action shooterAndPassthrough = new ParallelAction(
-            shooter.runShooter(3.0),
+            shooter.runShooter(3.5),
             new SequentialAction(
-                    new SleepAction(1.0),
-                    passthrough.runPassthrough(2.0)),
+                    new SleepAction(1.5),
+                    passthrough.runPassthrough(2.5)),
             new SequentialAction(
-            new SleepAction(1.0),
-            intake.runIntake(2.0)
+            new SleepAction(1.5),
+            intake.runIntake(2.5)
     )
     );
 
