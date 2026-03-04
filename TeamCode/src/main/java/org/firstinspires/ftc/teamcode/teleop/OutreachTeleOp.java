@@ -22,7 +22,7 @@ public class OutreachTeleOp extends OpMode {
     public CRServo intakeLeft;
     public CRServo intakeRight;
     public IMU imu;
-    double shooterSpeed = 0.90;
+    double shooterSpeed = 0.60;  //reduced from .9 default for outreach
 
     @Override
     public void init() {
