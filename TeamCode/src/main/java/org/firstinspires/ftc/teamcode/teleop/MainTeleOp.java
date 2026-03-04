@@ -22,7 +22,7 @@ public class MainTeleOp extends OpMode {
     public CRServo intakeLeft;
     public CRServo intakeRight;
     public IMU imu;
-    double shooterSpeed = 0.96;
+    double shooterSpeed = 0.90;
 
     @Override
     public void init() {

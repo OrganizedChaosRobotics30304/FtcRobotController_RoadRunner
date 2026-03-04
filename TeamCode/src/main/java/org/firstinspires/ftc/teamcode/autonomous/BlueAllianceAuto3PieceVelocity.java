@@ -167,7 +167,7 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToLeave = moveToShootPreload.endTrajectory().fresh()
             .setTangent(Math.toRadians(270))
-            .lineToYSplineHeading (-28, Math.toRadians(277));
+            .lineToYSplineHeading (-34, Math.toRadians(277));
 
     Action moveToLeaveAction = moveToLeave.build();
 
