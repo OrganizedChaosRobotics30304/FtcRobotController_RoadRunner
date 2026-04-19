@@ -108,7 +108,7 @@ public class OutreachTeleOp extends OpMode {
         double backRightPower = newForward + newRight - rotate;
         double backLeftPower = newForward - newRight + rotate;
 
-        double maxPower = .5;  //reduced from 1.0 for outreach
+        double maxPower = .25;  //reduced from 1.0 for outreach
         double maxSpeed = 1.0;
 
         maxPower = Math.max(maxPower, Math.abs(frontLeftPower));
