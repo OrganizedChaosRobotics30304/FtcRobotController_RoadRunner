@@ -82,8 +82,8 @@ public class ShooterClass {
         ()-> {
             //shooterLeft.setVelocity(1990);
             //shooterRight.setVelocity(1990);
-            shooterLeft.setVelocity(2200);
-            shooterRight.setVelocity(2200);
+            shooterLeft.setVelocity(2000);
+            shooterRight.setVelocity(2000);
         },
                 ()-> {
 
@@ -100,8 +100,8 @@ public class ShooterClass {
                 ()-> {
                     //shooterLeft.setVelocity(1960);
                    // shooterRight.setVelocity(1960);
-                    shooterLeft.setVelocity(2100);
-                    shooterRight.setVelocity(2100);
+                    shooterLeft.setVelocity(2000);
+                    shooterRight.setVelocity(2000);
                 },
                 ()-> {
 
@@ -200,7 +200,7 @@ public class IntakeClass{
 
     TrajectoryActionBuilder moveToShootFinal = moveToIntake.endTrajectory().fresh()
             .setTangent(Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(58, -9, Math.toRadians(10)),Math.PI / 2);
+            .splineToLinearHeading(new Pose2d(60, -9, Math.toRadians(10)),Math.PI / 2);
 
     Action moveToShootFinalAction = moveToShootFinal.build();
 
