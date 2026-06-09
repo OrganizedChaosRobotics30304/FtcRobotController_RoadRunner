@@ -80,8 +80,8 @@ public class ShooterClass {
 
         return new TimedAction(
         ()-> {
-            shooterLeft.setVelocity(1990);
-            shooterRight.setVelocity(1990);
+            shooterLeft.setVelocity(2000); //1990
+            shooterRight.setVelocity(2000);
         },
                 ()-> {
 
@@ -177,8 +177,8 @@ public class IntakeClass{
                     new SleepAction(1.0),
                     passthrough.runPassthrough(2.0)),
             new SequentialAction(
-            new SleepAction(1.0),
-            intake.runIntake(2.0)
+                    new SleepAction(1.0),
+                    intake.runIntake(2.0)
         )
     );
 
